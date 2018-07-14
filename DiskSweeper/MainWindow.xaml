@@ -48,8 +48,8 @@
     </Window.Resources>
 
     <Grid>
-        <TextBox Name="PathTestBox" Height="23" Margin="10,10,90,0" TextWrapping="Wrap" VerticalAlignment="Top" Background="#444444" BorderThickness="0" Foreground="#AAAAAA" Text=""/>
-        <Button Content="Scan" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="ButtonStart_Click"/>
+        <TextBox Name="PathTextBox" Height="23" Margin="10,10,90,0" TextWrapping="Wrap" VerticalAlignment="Top" Background="#444444" BorderThickness="0" Foreground="#AAAAAA" Text=""/>
+        <Button Name="StartButton" Content="Scan" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="StartButton_Click"/>
         <ListView Name="TheList" Margin="10,38,10,10" BorderThickness="0" Foreground="#333333">
             <ListView.View>
                 <GridView>

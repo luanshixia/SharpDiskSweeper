@@ -24,5 +24,13 @@ namespace DiskSweeper
         {
             InitializeComponent();
         }
+
+        private async void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            var engine = new SweepEngine(this.PathTextBox.Text);
+            var items = engine.GetDiskItems();
+            this.TheList.ItemsSource = items;
+            await Task.WhenAll(items.Select(item => item.Start()));
+        }
     }
 }
