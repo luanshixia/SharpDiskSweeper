@@ -13,8 +13,15 @@ namespace DiskSweeper
         public DiskItemType Type { get; set; }
         public string Name { get; set; }
         public long Size { get; set; }
-        public bool IsCalculationDone { get; set; }
+
+        public string SizeString => this.IsCalculationDone
+            ? DiskItem.FormatSize(this.Size)
+            : "(...)";
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool IsCalculationDone = false;
+        private readonly DirectoryInfo DirInfo;
 
         public DiskItem(FileSystemInfo info)
         {
@@ -23,18 +30,30 @@ namespace DiskSweeper
                 this.Type = DiskItemType.File;
                 this.Name = fileInfo.Name;
                 this.Size = fileInfo.Length;
+                this.IsCalculationDone = true;
             }
             else if (info is DirectoryInfo directoryInfo)
             {
                 this.Type = DiskItemType.Directory;
                 this.Name = directoryInfo.Name;
                 this.Size = 0;
+                this.DirInfo = directoryInfo;
             }
         }
 
         public async Task Start()
         {
+            if (this.Type == DiskItemType.File)
+            {
+                return;
+            }
 
+            this.Size = await Task.Run(() => SweepEngine
+                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo));
+
+            this.IsCalculationDone = true;
+            this.NotifyPropertyChanged(nameof(this.Size));
+            this.NotifyPropertyChanged(nameof(this.SizeString));
         }
 
         private void NotifyPropertyChanged(string propertyName)
@@ -42,9 +61,20 @@ namespace DiskSweeper
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void NotifyPropertyChanged()
+        private static string FormatSize(long size)
         {
-            this.NotifyPropertyChanged(nameof(this.Size));
+            if (size < 1024)
+            {
+                return size + " Byte";
+            }
+            else if (size < 1024 * 1024)
+            {
+                return (size / 1024) + " KB";
+            }
+            else
+            {
+                return (size / 1024 / 1024) + " MB";
+            }
         }
     }
 

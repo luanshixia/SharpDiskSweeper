@@ -53,7 +53,7 @@
         <ListView Name="TheList" Margin="10,38,10,10" BorderThickness="0" Foreground="#333333">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="50" />
+                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="80" />
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="300" />
                     <GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeString}" Width="100" />
                 </GridView>
