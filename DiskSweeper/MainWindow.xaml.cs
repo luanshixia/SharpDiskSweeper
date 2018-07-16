@@ -23,6 +23,8 @@ namespace DiskSweeper
         public MainWindow()
         {
             InitializeComponent();
+
+            this.PathTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)

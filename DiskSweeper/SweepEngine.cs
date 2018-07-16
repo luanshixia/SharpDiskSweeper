@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,12 +29,31 @@ namespace DiskSweeper
         public static async Task<long> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory)
         {
             var totalSize = 0L;
-            foreach (var childDirectory in directory.GetDirectories())
+
+            try
             {
-                totalSize += await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory);
+                foreach (var childDirectory in directory.GetDirectories())
+                {
+                    totalSize += await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory);
+                }
+
+                totalSize += directory.GetFiles().Sum(file => file.Length);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Trace.WriteLine(ex.Message);
+
+                ImpersonateHelper.DoImpersonation(() =>
+                {
+                    foreach (var childDirectory in directory.GetDirectories())
+                    {
+                        totalSize += SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory).Result;
+                    }
+
+                    totalSize += directory.GetFiles().Sum(file => file.Length);
+                });
             }
 
-            totalSize += directory.GetFiles().Sum(file => file.Length);
             return totalSize;
         }
     }
