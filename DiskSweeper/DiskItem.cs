@@ -14,6 +14,8 @@ namespace DiskSweeper
         public DiskItemType Type { get; set; }
         public string Name { get; set; }
         public long Size { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Modified { get; set; }
 
         public string SizeString => this.IsCalculationDone
             ? DiskItem.FormatSize(this.Size)
@@ -31,6 +33,8 @@ namespace DiskSweeper
                 this.Type = DiskItemType.File;
                 this.Name = fileInfo.Name;
                 this.Size = fileInfo.Length;
+                this.Created = fileInfo.CreationTime;
+                this.Modified = fileInfo.LastWriteTime;
                 this.IsCalculationDone = true;
             }
             else if (info is DirectoryInfo directoryInfo)
@@ -38,6 +42,8 @@ namespace DiskSweeper
                 this.Type = DiskItemType.Directory;
                 this.Name = directoryInfo.Name;
                 this.Size = 0;
+                this.Created = directoryInfo.CreationTime;
+                this.Modified = directoryInfo.LastWriteTime;
                 this.DirInfo = directoryInfo;
             }
         }
@@ -50,7 +56,7 @@ namespace DiskSweeper
             }
 
             this.Size = await Task.Run(() => SweepEngine
-                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken), cancellationToken);
+                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
 
             this.IsCalculationDone = true;
             this.NotifyPropertyChanged(nameof(this.Size));

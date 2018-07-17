@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DiskItem.cs" />
+    <Compile Include="GridViewSort.cs" />
     <Compile Include="ImpersonateHelper.cs" />
     <Compile Include="SweepEngine.cs" />
     <Page Include="MainWindow.xaml">
