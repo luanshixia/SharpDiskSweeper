@@ -34,10 +34,12 @@
                     <Setter Property="Foreground" Value="DimGray" />
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#222222" />
+                    <Setter Property="Background" Value="Orange" />
+                    <Setter Property="Foreground" Value="Black" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#333333" />
+                    <Setter Property="Background" Value="Peru" />
+                    <Setter Property="Foreground" Value="Black" />
                     <Setter Property="RenderTransform">
                         <Setter.Value>
                             <TranslateTransform X="1" Y="1" />
@@ -58,7 +60,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="80" />
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="300" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="500" />
                     <GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeString}" Width="100" />
                 </GridView>
             </ListView.View>

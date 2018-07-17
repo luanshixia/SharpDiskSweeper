@@ -50,7 +50,7 @@ namespace DiskSweeper
             }
 
             this.Size = await Task.Run(() => SweepEngine
-                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
+                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken), cancellationToken);
 
             this.IsCalculationDone = true;
             this.NotifyPropertyChanged(nameof(this.Size));

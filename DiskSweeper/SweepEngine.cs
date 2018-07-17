@@ -64,6 +64,10 @@ namespace DiskSweeper
                     totalSize += directory.GetFiles().Sum(file => file.Length);
                 });
             }
+            catch (DirectoryNotFoundException ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
 
             return totalSize;
         }

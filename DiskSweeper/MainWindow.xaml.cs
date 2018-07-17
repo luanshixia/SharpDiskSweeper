@@ -103,6 +103,11 @@ namespace DiskSweeper
         private async void TheList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = this.TheList.SelectedItem as DiskItem;
+            if (item.Type != DiskItemType.Directory)
+            {
+                return;
+            }
+
             await this.NewStart(path: Path.Combine(this.PathTextBox.Text, item.Name));
         }
     }
