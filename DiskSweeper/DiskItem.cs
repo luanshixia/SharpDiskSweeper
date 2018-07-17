@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiskSweeper
@@ -41,7 +42,7 @@ namespace DiskSweeper
             }
         }
 
-        public async Task Start()
+        public async Task Start(CancellationToken cancellationToken)
         {
             if (this.Type == DiskItemType.File)
             {
@@ -49,7 +50,7 @@ namespace DiskSweeper
             }
 
             this.Size = await Task.Run(() => SweepEngine
-                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo));
+                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
 
             this.IsCalculationDone = true;
             this.NotifyPropertyChanged(nameof(this.Size));

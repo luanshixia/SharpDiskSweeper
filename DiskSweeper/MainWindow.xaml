@@ -30,6 +30,9 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="DimGray" />
+                </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#222222" />
                 </Trigger>
@@ -46,9 +49,12 @@
     </Window.Resources>
 
     <Grid>
-        <TextBox Name="PathTextBox" Height="23" Margin="10,10,90,0" VerticalAlignment="Top" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\"/>
+        <Button Name="BackButton" Content="Back" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
+        <Button Name="ForwardButton" Content="Forward" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
+        <Button Name="UpButton" Content="Up" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
+        <TextBox Name="PathTextBox" Height="23" Margin="130,10,90,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\" KeyUp="PathTextBox_KeyUp"/>
         <Button Name="StartButton" Content="Scan" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="StartButton_Click"/>
-        <ListView Name="TheList" Margin="10,38,10,10" BorderThickness="0" Foreground="#333333">
+        <ListView Name="TheList" Margin="10,38,10,10" BorderThickness="0" Foreground="#333333" MouseDoubleClick="TheList_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="80" />

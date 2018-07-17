@@ -1,4 +1,6 @@
-﻿/* Title: A complete Impersonation Demo in C#
+﻿/* 
+ * https://www.codeproject.com/Articles/124981/Impersonating-user-accessing-files-and-HKCU
+ * Title: A complete Impersonation Demo in C#
  * Auther: Wayne Ye
  * Technical Blog: http://wayneye.wordpress.com
  * Personal website: http://WayneYe.com
@@ -6,12 +8,9 @@
 
 using System;
 using System.ComponentModel;
-using System.IO;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Security.Principal;
-using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
 
 namespace DiskSweeper
 {
@@ -114,10 +113,9 @@ namespace DiskSweeper
             {
                 if (RevertToSelf())
                 {
-                    Console.WriteLine("Before impersonation: " + WindowsIdentity.GetCurrent().Name);
+                    Debug.WriteLine("Before impersonation: " + WindowsIdentity.GetCurrent().Name);
 
                     String userName = "TempUser";
-                    //IntPtr password = GetPassword();
 
                     if (LogonUser(
                         userName,
@@ -134,12 +132,10 @@ namespace DiskSweeper
                             {
                                 if (impersonationContext != null)
                                 {
-                                    Console.WriteLine("After Impersonation succeeded: " + Environment.NewLine +
-                                                      "User Name: " +
-                                                      WindowsIdentity.GetCurrent(TokenAccessLevels.MaximumAllowed).Name +
-                                                      Environment.NewLine +
-                                                      "SID: " +
-                                                      WindowsIdentity.GetCurrent(TokenAccessLevels.MaximumAllowed).User.Value);
+                                    Debug.WriteLine(
+                                        "After Impersonation succeeded: " + Environment.NewLine +
+                                        "User Name: " + WindowsIdentity.GetCurrent(TokenAccessLevels.MaximumAllowed).Name + Environment.NewLine +
+                                        "SID: " + WindowsIdentity.GetCurrent(TokenAccessLevels.MaximumAllowed).User.Value);
 
                                     // Load user profile
                                     ProfileInfo profileInfo = new ProfileInfo();
@@ -150,13 +146,13 @@ namespace DiskSweeper
 
                                     if (!loadSuccess)
                                     {
-                                        Console.WriteLine("LoadUserProfile() failed with error code: " + Marshal.GetLastWin32Error());
+                                        Debug.WriteLine("LoadUserProfile() failed with error code: " + Marshal.GetLastWin32Error());
                                         throw new Win32Exception(Marshal.GetLastWin32Error());
                                     }
 
                                     if (profileInfo.hProfile == IntPtr.Zero)
                                     {
-                                        Console.WriteLine(
+                                        Debug.WriteLine(
                                             "LoadUserProfile() failed - HKCU handle was not loaded. Error code: " +
                                             Marshal.GetLastWin32Error());
 
@@ -165,12 +161,6 @@ namespace DiskSweeper
 
                                     CloseHandle(token);
                                     CloseHandle(tokenDuplicate);
-
-                                    //// Do tasks after impersonating successfully
-                                    //AccessFileSystem();
-
-                                    //// Access HKCU after loading user's profile
-                                    //AccessHkcuRegistry(profileInfo.hProfile);
 
                                     action();
 
@@ -188,7 +178,7 @@ namespace DiskSweeper
                         }
                         else
                         {
-                            Console.WriteLine("DuplicateToken() failed with error code: " + Marshal.GetLastWin32Error());
+                            Debug.WriteLine("DuplicateToken() failed with error code: " + Marshal.GetLastWin32Error());
                             throw new Win32Exception(Marshal.GetLastWin32Error());
                         }
                     }
@@ -207,76 +197,8 @@ namespace DiskSweeper
                 if (token != IntPtr.Zero) CloseHandle(token);
                 if (tokenDuplicate != IntPtr.Zero) CloseHandle(tokenDuplicate);
 
-                Console.WriteLine("After finished impersonation: " + WindowsIdentity.GetCurrent().Name);
+                Debug.WriteLine("After finished impersonation: " + WindowsIdentity.GetCurrent().Name);
             }
-        }
-
-        private static void AccessHkcuRegistry(IntPtr hkcuHandle)
-        {
-            // Access registry HKCU
-            using (SafeRegistryHandle safeHandle = new SafeRegistryHandle(hkcuHandle, true))
-            {
-                using (RegistryKey tempUserHKCU = RegistryKey.FromHandle(safeHandle))
-                {
-                    // Unum all sub keys under tempuser's HKCU 
-                    String[] keys = tempUserHKCU.GetSubKeyNames();
-
-                    // Create a new sub key under tempuser's HKCU 
-                    using (RegistryKey tempKeyByWayne = tempUserHKCU.CreateSubKey("TempKeyByWayne"))
-                    {
-                        Console.WriteLine("TempKeyByWayne under TempUser's HKCU was created!");
-                        // Ensure priviledge
-                        //RegistrySecurity registrySecurity = new RegistrySecurity();
-                        //RegistryAccessRule accessRule = new RegistryAccessRule(Environment.MachineName + "\\" + userName,
-                        //                                                       RegistryRights.TakeOwnership,
-                        //                                                       InheritanceFlags.ContainerInherit,
-                        //                                                       PropagationFlags.None,
-                        //                                                       AccessControlType.Allow);
-                        //registrySecurity.SetAccessRule(accessRule);
-                        //tempKeyByWayne.SetAccessControl(registrySecurity);
-
-                        // Create a new String value under created TempKeyByWayne subkey
-                        tempKeyByWayne.SetValue("StrType", "TempContent", RegistryValueKind.String);
-
-                        // Read the value
-                        using (RegistryKey regKey = tempUserHKCU.OpenSubKey("TempKeyByWayne"))
-                        {
-                            String valueContent = regKey.GetValue("StrType") as String;
-                            Console.WriteLine("HKEY_CURRENT_USER\\TempKeyByWayne\\strTyle value: " + valueContent);
-                        }
-
-                        // Delete created TempKeyByWayne subkey
-                        tempUserHKCU.DeleteSubKey("TempKeyByWayne");
-                        Console.WriteLine("TempKeyByWayne under TempUser's HKCU was deleted!");
-                        tempKeyByWayne.Close();
-                    }
-                }
-            }
-        }
-
-        private static void AccessFileSystem()
-        {
-            // Access file system %appdata% will be "C:\Users\TempUser\appdata\Roaming"
-            String appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            File.AppendAllText("C:\\TempFolder\\Temp.txt", "some text...");
-        }
-
-        private static IntPtr GetPassword()
-        {
-            IntPtr password = IntPtr.Zero;
-
-            using (SecureString secureString = new SecureString())
-            {
-                foreach (char c in "!@#$QWERasdf")
-                    secureString.AppendChar(c);
-
-                // Lock the password down
-                secureString.MakeReadOnly();
-
-                password = Marshal.SecureStringToBSTR(secureString);
-            }
-
-            return password;
         }
     }
 }
