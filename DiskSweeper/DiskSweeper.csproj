@@ -59,6 +59,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DiskItem.cs" />
+    <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="GridViewSort.cs" />
     <Compile Include="ImpersonateHelper.cs" />
     <Compile Include="SweepEngine.cs" />

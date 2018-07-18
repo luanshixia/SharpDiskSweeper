@@ -14,17 +14,22 @@ namespace DiskSweeper
         public DiskItemType Type { get; set; }
         public string Name { get; set; }
         public long Size { get; set; }
+        public long SizeOnDisk { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public string Highlight => this.Size > 1024 * 1024 * 1024
+        public string Highlight => this.SizeOnDisk > 1024 * 1024 * 1024
             ? "P0"
-            : this.Size > 128 * 1024 * 1024
+            : this.SizeOnDisk > 128 * 1024 * 1024
                 ? "P1"
                 : null;
 
         public string SizeString => this.IsCalculationDone
             ? DiskItem.FormatSize(this.Size)
+            : "(...)";
+
+        public string SizeOnDiskString => this.IsCalculationDone
+            ? DiskItem.FormatSize(this.SizeOnDisk)
             : "(...)";
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,6 +44,7 @@ namespace DiskSweeper
                 this.Type = DiskItemType.File;
                 this.Name = fileInfo.Name;
                 this.Size = fileInfo.Length;
+                this.SizeOnDisk = fileInfo.GetSizeOnDisk();
                 this.Created = fileInfo.CreationTime;
                 this.Modified = fileInfo.LastWriteTime;
                 this.IsCalculationDone = true;
@@ -48,6 +54,7 @@ namespace DiskSweeper
                 this.Type = DiskItemType.Directory;
                 this.Name = directoryInfo.Name;
                 this.Size = 0;
+                this.SizeOnDisk = 0;
                 this.Created = directoryInfo.CreationTime;
                 this.Modified = directoryInfo.LastWriteTime;
                 this.DirInfo = directoryInfo;
@@ -61,12 +68,14 @@ namespace DiskSweeper
                 return;
             }
 
-            this.Size = await Task.Run(() => SweepEngine
+            (this.Size, this.SizeOnDisk) = await Task.Run(() => SweepEngine
                 .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
 
             this.IsCalculationDone = true;
             this.NotifyPropertyChanged(nameof(this.Size));
             this.NotifyPropertyChanged(nameof(this.SizeString));
+            this.NotifyPropertyChanged(nameof(this.SizeOnDisk));
+            this.NotifyPropertyChanged(nameof(this.SizeOnDiskString));
             this.NotifyPropertyChanged(nameof(this.Highlight));
         }
 

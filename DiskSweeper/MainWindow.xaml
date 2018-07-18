@@ -71,6 +71,7 @@
                     <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" local:GridViewSort.PropertyName="Type" Width="80" />
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" local:GridViewSort.PropertyName="Name" Width="500" />
                     <GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeString}" local:GridViewSort.PropertyName="Size" Width="100" />
+                    <GridViewColumn Header="Size on disk" DisplayMemberBinding="{Binding SizeOnDiskString}" local:GridViewSort.PropertyName="SizeOnDisk" Width="100" />
                     <GridViewColumn Header="Modified" DisplayMemberBinding="{Binding Modified}" local:GridViewSort.PropertyName="Modified" Width="150" />
                     <GridViewColumn Header="Created" DisplayMemberBinding="{Binding Created}" local:GridViewSort.PropertyName="Created" Width="150" />
                 </GridView>

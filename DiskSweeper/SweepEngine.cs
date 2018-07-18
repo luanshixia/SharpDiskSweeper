@@ -27,15 +27,18 @@ namespace DiskSweeper
                     .Select(info => new DiskItem(info)));
         }
 
-        public static async Task<long> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
+        public static async Task<(long, long)> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
         {
             var totalSize = 0L;
+            var totalSizeOnDisk = 0L;
 
             try
             {
                 foreach (var childDirectory in directory.GetDirectories())
                 {
-                    totalSize += await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken);
+                    var (size, sizeOnDisk) = await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken);
+                    totalSize += size;
+                    totalSizeOnDisk += sizeOnDisk;
 
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -44,32 +47,18 @@ namespace DiskSweeper
                 }
 
                 totalSize += directory.GetFiles().Sum(file => file.Length);
+                totalSizeOnDisk += directory.GetFiles().Sum(file => file.GetSizeOnDisk());
             }
             catch (UnauthorizedAccessException ex)
             {
                 Trace.WriteLine(ex.Message);
-
-                ImpersonateHelper.DoImpersonation(() =>
-                {
-                    foreach (var childDirectory in directory.GetDirectories())
-                    {
-                        totalSize += SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken).Result;
-
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                    }
-
-                    totalSize += directory.GetFiles().Sum(file => file.Length);
-                });
             }
             catch (DirectoryNotFoundException ex)
             {
                 Trace.WriteLine(ex.Message);
             }
 
-            return totalSize;
+            return (totalSize, totalSizeOnDisk);
         }
     }
 }
