@@ -52,11 +52,12 @@
     </Window.Resources>
 
     <Grid>
-        <Button Name="BackButton" Content="←" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
-        <Button Name="ForwardButton" Content="→" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
-        <Button Name="UpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
-        <TextBox Name="PathTextBox" Height="23" Margin="130,10,90,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\" KeyUp="PathTextBox_KeyUp"/>
-        <Button Name="StartButton" Content="↙" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="StartButton_Click"/>
+        <Button Name="BackButton" Content="←" ToolTip="Go back" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
+        <Button Name="ForwardButton" Content="→" ToolTip="Go forward" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
+        <Button Name="UpButton" Content="↑" ToolTip="Go up" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
+        <TextBox Name="PathTextBox" Height="23" Margin="130,10,85,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\" KeyUp="PathTextBox_KeyUp"/>
+        <Button Name="StartButton" Content="↙" ToolTip="Start scan or refresh" HorizontalAlignment="Right" Margin="0,10,45,0" VerticalAlignment="Top" Width="40" Height="23" Click="StartButton_Click"/>
+        <Button Name="ExploreButton" Content="↗" ToolTip="Show in Explorer" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="35" Height="23" Click="ExploreButton_Click"/>
         <ListView 
             Name="TheList"
             Margin="10,38,10,10"

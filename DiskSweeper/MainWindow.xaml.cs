@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -112,6 +113,11 @@ namespace DiskSweeper
 
                 await this.NewStart(path: Path.Combine(this.PathTextBox.Text, item.Name));
             }
+        }
+
+        private void ExploreButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("explorer", this.PathTextBox.Text);
         }
     }
 }
