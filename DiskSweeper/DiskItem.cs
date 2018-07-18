@@ -17,6 +17,12 @@ namespace DiskSweeper
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
+        public string Highlight => this.Size > 1024 * 1024 * 1024
+            ? "P0"
+            : this.Size > 128 * 1024 * 1024
+                ? "P1"
+                : null;
+
         public string SizeString => this.IsCalculationDone
             ? DiskItem.FormatSize(this.Size)
             : "(...)";
@@ -61,6 +67,7 @@ namespace DiskSweeper
             this.IsCalculationDone = true;
             this.NotifyPropertyChanged(nameof(this.Size));
             this.NotifyPropertyChanged(nameof(this.SizeString));
+            this.NotifyPropertyChanged(nameof(this.Highlight));
         }
 
         private void NotifyPropertyChanged(string propertyName)

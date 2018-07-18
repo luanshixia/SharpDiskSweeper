@@ -11,6 +11,7 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#333333" />
             <Setter Property="Foreground" Value="DarkGray" />
+            <Setter Property="FontFamily" Value="Calibri" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
@@ -51,11 +52,11 @@
     </Window.Resources>
 
     <Grid>
-        <Button Name="BackButton" Content="Back" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
-        <Button Name="ForwardButton" Content="Forward" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
-        <Button Name="UpButton" Content="Up" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
+        <Button Name="BackButton" Content="←" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
+        <Button Name="ForwardButton" Content="→" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
+        <Button Name="UpButton" Content="↑" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
         <TextBox Name="PathTextBox" Height="23" Margin="130,10,90,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\" KeyUp="PathTextBox_KeyUp"/>
-        <Button Name="StartButton" Content="Scan" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="StartButton_Click"/>
+        <Button Name="StartButton" Content="↙" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Height="23" Click="StartButton_Click"/>
         <ListView 
             Name="TheList"
             Margin="10,38,10,10"
@@ -73,6 +74,33 @@
                     <GridViewColumn Header="Created" DisplayMemberBinding="{Binding Created}" local:GridViewSort.PropertyName="Created" Width="150" />
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}"  >
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border Padding="2" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                                    <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Highlight}" Value="P0">
+                            <Setter Property="Background" Value="LightPink"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Highlight}" Value="P1">
+                            <Setter Property="Background" Value="Bisque"/>
+                        </DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Silver" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="Orange" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </Grid>
 </Window>
