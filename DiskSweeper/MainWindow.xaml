@@ -79,7 +79,7 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
-                                <Border Padding="2" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                                <Border Padding="2" Background="{TemplateBinding Background}">
                                     <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"/>
                                 </Border>
                             </ControlTemplate>
@@ -96,7 +96,7 @@
                             <Setter Property="Background" Value="WhiteSmoke" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="Orange" />
+                            <Setter Property="Background" Value="LightGray" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>

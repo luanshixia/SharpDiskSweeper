@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>DiskSweeper.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -99,10 +102,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dreambuild.Common\Dreambuild.Common\Dreambuild.Common.csproj">
-      <Project>{733ddecf-3069-436f-89e2-0bba8c1f1273}</Project>
-      <Name>Dreambuild.Common</Name>
-    </ProjectReference>
+    <Resource Include="DiskSweeper.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
