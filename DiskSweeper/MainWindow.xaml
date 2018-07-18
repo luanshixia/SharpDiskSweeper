@@ -93,7 +93,7 @@
                             <Setter Property="Background" Value="Bisque"/>
                         </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Silver" />
+                            <Setter Property="Background" Value="WhiteSmoke" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="Orange" />

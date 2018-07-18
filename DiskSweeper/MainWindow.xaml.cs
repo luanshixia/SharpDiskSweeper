@@ -33,6 +33,7 @@ namespace DiskSweeper
             var engine = new SweepEngine(this.PathTextBox.Text);
             var items = engine.GetDiskItems();
             this.TheList.ItemsSource = items;
+            this.TheList.SelectedItem = null;
             await Task.WhenAll(items.Select(item => item.Start(this.CurrentCancellationTokenSource.Token)));
         }
 
