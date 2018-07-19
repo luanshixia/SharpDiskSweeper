@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiskSweeper"
         mc:Ignorable="d"
-        Title="Disk Sweeper" Height="600" Width="800" Background="DimGray" WindowStartupLocation="CenterScreen">
+        Title="Disk Sweeper" Height="600" Width="800"
+        Background="DimGray" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -52,12 +53,37 @@
     </Window.Resources>
 
     <Grid>
-        <Button Name="BackButton" Content="←" ToolTip="Go back" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="40" Height="23" Click="BackButton_Click"/>
-        <Button Name="ForwardButton" Content="→" ToolTip="Go forward" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,10,0,0" Width="40" Height="23" Click="ForwardButton_Click"/>
-        <Button Name="UpButton" Content="↑" ToolTip="Go up" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0" Width="40" Height="23" Click="UpButton_Click"/>
-        <TextBox Name="PathTextBox" Height="23" Margin="130,10,85,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Background="DarkGray" BorderThickness="0" Foreground="Black" Text="C:\" KeyUp="PathTextBox_KeyUp"/>
-        <Button Name="StartButton" Content="↙" ToolTip="Start scan or refresh" HorizontalAlignment="Right" Margin="0,10,45,0" VerticalAlignment="Top" Width="40" Height="23" Click="StartButton_Click"/>
-        <Button Name="ExploreButton" Content="↗" ToolTip="Show in Explorer" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="35" Height="23" Click="ExploreButton_Click"/>
+        <Button
+            Name="BackButton" Content="←" ToolTip="Go back"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="10,10,0,0" Width="40" Height="23"
+            Click="BackButton_Click"/>
+        <Button
+            Name="ForwardButton" Content="→" ToolTip="Go forward"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="50,10,0,0" Width="40" Height="23"
+            Click="ForwardButton_Click"/>
+        <Button
+            Name="UpButton" Content="↑" ToolTip="Go up"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="90,10,0,0" Width="40" Height="23"
+            Click="UpButton_Click"/>
+        <TextBox
+            Name="PathTextBox" Height="23" Margin="130,10,85,0"
+            VerticalAlignment="Top" VerticalContentAlignment="Center"
+            Background="DarkGray" BorderThickness="0" Foreground="Black"
+            Text="C:\" KeyUp="PathTextBox_KeyUp"/>
+        <Button
+            Name="StartButton" Content="↙" ToolTip="Start scan or refresh"
+            HorizontalAlignment="Right" VerticalAlignment="Top"
+            Margin="0,10,45,0" Width="40" Height="23"
+            Click="StartButton_Click"/>
+        <Button
+            Name="ExploreButton" Content="↗" ToolTip="Show in Explorer"
+            HorizontalAlignment="Right" VerticalAlignment="Top"
+            Margin="0,10,10,0" Width="35" Height="23"
+            Click="ExploreButton_Click"/>
+
         <ListView 
             Name="TheList"
             Margin="10,38,10,10"
@@ -81,12 +107,36 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Type" CellTemplate="{StaticResource TypeIcon}" local:GridViewSort.PropertyName="Type" Width="50" />
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" local:GridViewSort.PropertyName="Name" Width="500" />
-                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeString}" local:GridViewSort.PropertyName="Size" Width="100" />
-                    <GridViewColumn Header="Size on disk" DisplayMemberBinding="{Binding SizeOnDiskString}" local:GridViewSort.PropertyName="SizeOnDisk" Width="100" />
-                    <GridViewColumn Header="Modified" DisplayMemberBinding="{Binding Modified}" local:GridViewSort.PropertyName="Modified" Width="150" />
-                    <GridViewColumn Header="Created" DisplayMemberBinding="{Binding Created}" local:GridViewSort.PropertyName="Created" Width="150" />
+                    <GridViewColumn
+                        Header="Type"
+                        CellTemplate="{StaticResource TypeIcon}"
+                        local:GridViewSort.PropertyName="Type"
+                        Width="50" />
+                    <GridViewColumn
+                        Header="Name"
+                        DisplayMemberBinding="{Binding Name}"
+                        local:GridViewSort.PropertyName="Name"
+                        Width="500" />
+                    <GridViewColumn
+                        Header="Size"
+                        DisplayMemberBinding="{Binding SizeString}"
+                        local:GridViewSort.PropertyName="Size"
+                        Width="100" />
+                    <GridViewColumn
+                        Header="Size on disk"
+                        DisplayMemberBinding="{Binding SizeOnDiskString}"
+                        local:GridViewSort.PropertyName="SizeOnDisk"
+                        Width="100" />
+                    <GridViewColumn
+                        Header="Modified"
+                        DisplayMemberBinding="{Binding Modified}"
+                        local:GridViewSort.PropertyName="Modified"
+                        Width="150" />
+                    <GridViewColumn
+                        Header="Created"
+                        DisplayMemberBinding="{Binding Created}"
+                        local:GridViewSort.PropertyName="Created"
+                        Width="150" />
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
@@ -95,7 +145,9 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
                                 <Border Padding="2" Background="{TemplateBinding Background}">
-                                    <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"/>
+                                    <GridViewRowPresenter
+                                        Content="{TemplateBinding Content}"
+                                        Columns="{TemplateBinding GridView.ColumnCollection}"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
