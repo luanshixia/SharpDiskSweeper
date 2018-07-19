@@ -18,9 +18,9 @@ namespace DiskSweeper
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public string Highlight => this.SizeOnDisk > 1024 * 1024 * 1024
+        public string Highlight => this.Size > 1024 * 1024 * 1024
             ? "P0"
-            : this.SizeOnDisk > 128 * 1024 * 1024
+            : this.Size > 128 * 1024 * 1024
                 ? "P1"
                 : null;
 

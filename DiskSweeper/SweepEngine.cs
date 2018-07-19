@@ -47,7 +47,7 @@ namespace DiskSweeper
                 }
 
                 totalSize += directory.GetFiles().Sum(file => file.Length);
-                totalSizeOnDisk += directory.GetFiles().Sum(file => file.GetSizeOnDisk());
+                //totalSizeOnDisk += directory.GetFiles().Sum(file => file.GetSizeOnDisk());
             }
             catch (UnauthorizedAccessException ex)
             {
