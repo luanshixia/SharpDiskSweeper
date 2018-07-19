@@ -14,6 +14,14 @@ namespace DiskSweeper
     {
         private readonly DirectoryInfo Directory;
 
+        public static long P0SizeFloor => ConfigurationHelper.GetConfigurationInt64(
+            settingName: "DiskSweeper.Highlights.P0.SizeFloor",
+            defaultValue: 1073741824L);
+
+        public static long P1SizeFloor => ConfigurationHelper.GetConfigurationInt64(
+            settingName: "DiskSweeper.Highlights.P1.SizeFloor",
+            defaultValue: 134217728L);
+
         public SweepEngine(string path)
         {
             this.Directory = new DirectoryInfo(path);

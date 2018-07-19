@@ -18,9 +18,9 @@ namespace DiskSweeper
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public string Highlight => this.Size > 1024 * 1024 * 1024
+        public string Highlight => this.Size > SweepEngine.P0SizeFloor
             ? "P0"
-            : this.Size > 128 * 1024 * 1024
+            : this.Size > SweepEngine.P1SizeFloor
                 ? "P1"
                 : null;
 
