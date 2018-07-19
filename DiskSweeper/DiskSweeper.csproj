@@ -107,5 +107,9 @@
   <ItemGroup>
     <Resource Include="DiskSweeper.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\File.png" />
+    <Resource Include="Resources\Folder.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

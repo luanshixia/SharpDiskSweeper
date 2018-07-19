@@ -66,9 +66,22 @@
             MouseDoubleClick="TheList_MouseDoubleClick"
             IsSynchronizedWithCurrentItem="True"
             local:GridViewSort.AutoSort="True">
+            <ListView.Resources>
+                <DataTemplate x:Key="TypeIcon">
+                    <Image x:Name="IconImage" Source="Resources/File.png" Width="20" Height="20" />
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Type}" Value="File">
+                            <Setter Property="Source" TargetName="IconImage" Value="Resources/File.png" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="Directory">
+                            <Setter Property="Source" TargetName="IconImage" Value="Resources/Folder.png" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" local:GridViewSort.PropertyName="Type" Width="80" />
+                    <GridViewColumn Header="Type" CellTemplate="{StaticResource TypeIcon}" local:GridViewSort.PropertyName="Type" Width="50" />
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" local:GridViewSort.PropertyName="Name" Width="500" />
                     <GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeString}" local:GridViewSort.PropertyName="Size" Width="100" />
                     <GridViewColumn Header="Size on disk" DisplayMemberBinding="{Binding SizeOnDiskString}" local:GridViewSort.PropertyName="SizeOnDisk" Width="100" />
@@ -77,7 +90,7 @@
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}"  >
+                <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
