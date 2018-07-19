@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("DiskSweeper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP Inc.")]
-[assembly: AssemblyProduct("DiskSweeper")]
-[assembly: AssemblyCopyright("Copyright © HP Inc. 2018")]
+[assembly: AssemblyCompany("Yang Wang (GitHub: @luanshixia)")]
+[assembly: AssemblyProduct("Disk Sweeper")]
+[assembly: AssemblyCopyright("Copyright © Yang Wang 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
