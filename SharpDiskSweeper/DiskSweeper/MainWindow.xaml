@@ -122,6 +122,16 @@
                         DisplayMemberBinding="{Binding SizeString}"
                         local:GridViewSort.PropertyName="Size"
                         Width="100" />
+                    <GridViewColumn
+                        Header="Files count"
+                        DisplayMemberBinding="{Binding FilesCount}"
+                        local:GridViewSort.PropertyName="FilesCount"
+                        Width="100" />
+                    <GridViewColumn
+                        Header="Folders count"
+                        DisplayMemberBinding="{Binding FoldersCount}"
+                        local:GridViewSort.PropertyName="FoldersCount"
+                        Width="100" />
                     <!--<GridViewColumn
                         Header="Size on disk"
                         DisplayMemberBinding="{Binding SizeOnDiskString}"

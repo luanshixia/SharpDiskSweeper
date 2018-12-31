@@ -15,6 +15,8 @@ namespace DiskSweeper
         public string Name { get; set; }
         public long Size { get; set; }
         public long SizeOnDisk { get; set; }
+        public long FilesCount { get; set; }
+        public long FoldersCount { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
@@ -45,6 +47,8 @@ namespace DiskSweeper
                 this.Name = fileInfo.Name;
                 this.Size = fileInfo.Length;
                 this.SizeOnDisk = fileInfo.GetSizeOnDisk();
+                this.FilesCount = 1;
+                this.FoldersCount = 0;
                 this.Created = fileInfo.CreationTime;
                 this.Modified = fileInfo.LastWriteTime;
                 this.IsCalculationDone = true;
@@ -55,6 +59,8 @@ namespace DiskSweeper
                 this.Name = directoryInfo.Name;
                 this.Size = 0;
                 this.SizeOnDisk = 0;
+                this.FilesCount = 0;
+                this.FoldersCount = 0;
                 this.Created = directoryInfo.CreationTime;
                 this.Modified = directoryInfo.LastWriteTime;
                 this.DirInfo = directoryInfo;
@@ -68,7 +74,7 @@ namespace DiskSweeper
                 return;
             }
 
-            (this.Size, this.SizeOnDisk) = await Task.Run(() => SweepEngine
+            (this.Size, this.SizeOnDisk, this.FilesCount, this.FoldersCount) = await Task.Run(() => SweepEngine
                 .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
 
             this.IsCalculationDone = true;
@@ -76,6 +82,8 @@ namespace DiskSweeper
             this.NotifyPropertyChanged(nameof(this.SizeString));
             this.NotifyPropertyChanged(nameof(this.SizeOnDisk));
             this.NotifyPropertyChanged(nameof(this.SizeOnDiskString));
+            this.NotifyPropertyChanged(nameof(this.FilesCount));
+            this.NotifyPropertyChanged(nameof(this.FoldersCount));
             this.NotifyPropertyChanged(nameof(this.Highlight));
         }
 

@@ -35,18 +35,22 @@ namespace DiskSweeper
                     .Select(info => new DiskItem(info)));
         }
 
-        public static async Task<(long, long)> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
+        public static async Task<(long, long, long, long)> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
         {
             var totalSize = 0L;
             var totalSizeOnDisk = 0L;
+            var totalFilesCount = 0L;
+            var totalFoldersCount = 0L;
 
             try
             {
                 foreach (var childDirectory in directory.GetDirectories())
                 {
-                    var (size, sizeOnDisk) = await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken);
+                    var (size, sizeOnDisk, filesCount, foldersCount) = await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken);
                     totalSize += size;
                     totalSizeOnDisk += sizeOnDisk;
+                    totalFilesCount += filesCount;
+                    totalFoldersCount += foldersCount;
 
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -56,6 +60,8 @@ namespace DiskSweeper
 
                 totalSize += directory.GetFiles().Sum(file => file.Length);
                 //totalSizeOnDisk += directory.GetFiles().Sum(file => file.GetSizeOnDisk());
+                totalFilesCount += directory.GetFiles().Count();
+                totalFoldersCount += 1;
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -66,7 +72,7 @@ namespace DiskSweeper
                 Trace.WriteLine(ex.Message);
             }
 
-            return (totalSize, totalSizeOnDisk);
+            return (totalSize, totalSizeOnDisk, totalFilesCount, totalFoldersCount);
         }
     }
 }
