@@ -28,11 +28,11 @@ namespace DiskSweeper
 
         public string SizeString => this.IsCalculationDone
             ? DiskItem.FormatSize(this.Size)
-            : "(...)";
+            : "..." + DiskItem.FormatSize(this.Size);
 
         public string SizeOnDiskString => this.IsCalculationDone
             ? DiskItem.FormatSize(this.SizeOnDisk)
-            : "(...)";
+            : "..." + DiskItem.FormatSize(this.SizeOnDisk);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -74,10 +74,20 @@ namespace DiskSweeper
                 return;
             }
 
-            (this.Size, this.SizeOnDisk, this.FilesCount, this.FoldersCount) = await Task.Run(() => SweepEngine
-                .CalculateDirectorySizeRecursivelyAsync(this.DirInfo, cancellationToken));
+            var engine = new SweepEngine(this.DirInfo);
+            engine.ReportProgress += (sender, e) => this.ReportChanges(engine);
+
+            await Task.Run(() => engine
+                .CalculateDirectorySizeRecursivelyWithUpdateAsync(this.DirInfo, cancellationToken));
 
             this.IsCalculationDone = true;
+            this.ReportChanges(engine);
+        }
+
+        private void ReportChanges(SweepEngine engine)
+        {
+            (this.Size, this.SizeOnDisk, this.FilesCount, this.FoldersCount) = engine.Result;
+
             this.NotifyPropertyChanged(nameof(this.Size));
             this.NotifyPropertyChanged(nameof(this.SizeString));
             this.NotifyPropertyChanged(nameof(this.SizeOnDisk));

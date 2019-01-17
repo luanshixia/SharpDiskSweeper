@@ -13,6 +13,18 @@ namespace DiskSweeper
     public class SweepEngine
     {
         private readonly DirectoryInfo Directory;
+        private const int ProgressReportInterval = 200;
+
+        private long TotalSize;
+        private long TotalSizeOnDisk;
+        private long TotalFilesCount;
+        private long TotalFoldersCount;
+
+        private long ChangesCount;
+
+        public event EventHandler ReportProgress;
+
+        public (long, long, long, long) Result => (this.TotalSize, this.TotalSizeOnDisk, this.TotalFilesCount, this.TotalFoldersCount);
 
         public static long P0SizeFloor => ConfigurationHelper.GetConfigurationInt64(
             settingName: "DiskSweeper.Highlights.P0.SizeFloor",
@@ -27,6 +39,11 @@ namespace DiskSweeper
             this.Directory = new DirectoryInfo(path);
         }
 
+        public SweepEngine(DirectoryInfo dir)
+        {
+            this.Directory = dir;
+        }
+
         public ObservableCollection<DiskItem> GetDiskItems()
         {
             return new ObservableCollection<DiskItem>(
@@ -35,22 +52,13 @@ namespace DiskSweeper
                     .Select(info => new DiskItem(info)));
         }
 
-        public static async Task<(long, long, long, long)> CalculateDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
+        public async Task CalculateDirectorySizeRecursivelyWithUpdateAsync(DirectoryInfo directory, CancellationToken cancellationToken)
         {
-            var totalSize = 0L;
-            var totalSizeOnDisk = 0L;
-            var totalFilesCount = 0L;
-            var totalFoldersCount = 0L;
-
             try
             {
                 foreach (var childDirectory in directory.GetDirectories())
                 {
-                    var (size, sizeOnDisk, filesCount, foldersCount) = await SweepEngine.CalculateDirectorySizeRecursivelyAsync(childDirectory, cancellationToken);
-                    totalSize += size;
-                    totalSizeOnDisk += sizeOnDisk;
-                    totalFilesCount += filesCount;
-                    totalFoldersCount += foldersCount;
+                    await this.CalculateDirectorySizeRecursivelyWithUpdateAsync(childDirectory, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -58,10 +66,13 @@ namespace DiskSweeper
                     }
                 }
 
-                totalSize += directory.GetFiles().Sum(file => file.Length);
-                //totalSizeOnDisk += directory.GetFiles().Sum(file => file.GetSizeOnDisk());
-                totalFilesCount += directory.GetFiles().Count();
-                totalFoldersCount += 1;
+                var files = directory.GetFiles();
+                this.TotalSize += files.Sum(file => file.Length);
+                //this.TotalSizeOnDisk += files.Sum(file => file.GetSizeOnDisk());
+                this.TotalFilesCount += files.Count();
+                this.TotalFoldersCount += 1;
+
+                this.CountChanges();
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -71,8 +82,15 @@ namespace DiskSweeper
             {
                 Trace.WriteLine(ex.Message);
             }
+        }
 
-            return (totalSize, totalSizeOnDisk, totalFilesCount, totalFoldersCount);
+        private void CountChanges()
+        {
+            this.ChangesCount++;
+            if (this.ChangesCount % SweepEngine.ProgressReportInterval == 0)
+            {
+                this.ReportProgress?.Invoke(this, null);
+            }
         }
     }
 }
