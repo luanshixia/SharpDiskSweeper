@@ -63,6 +63,7 @@
     <Compile Include="DiskItem.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="GridViewSort.cs" />
+    <Compile Include="ShellExtensionAdder.cs" />
     <Compile Include="SweepEngine.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
