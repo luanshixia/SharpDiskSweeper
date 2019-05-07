@@ -21,14 +21,14 @@ namespace DiskSweeper
         //    { $@"HKEY_CLASSES_ROOT\{shellObject}\shell\{appName}\command", $"@={command}" }
         //};
 
-        public static (string, string, string, string)[] GetRegValuesToAdd(string shellObject, string appName, string caption, string command, string icon = null) => new[]
+        public static (string, string, string, string)[] GetRegEntriesToAdd(string shellObject, string appName, string caption, string command, string icon = null) => new[]
         {
             ($@"HKEY_CLASSES_ROOT\{shellObject}\shell\{appName}", "", caption, "REG_EXPAND_SZ"),
             ($@"HKEY_CLASSES_ROOT\{shellObject}\shell\{appName}", "Icon", icon, "REG_EXPAND_SZ"),
             ($@"HKEY_CLASSES_ROOT\{shellObject}\shell\{appName}\command", "", command, "REG_EXPAND_SZ")
         }.Where(entry => entry.Item3 != null).ToArray();
 
-        public static void AddRegValues((string, string, string, string)[] regValues)
+        public static void AddRegEntries((string, string, string, string)[] regValues)
         {
             foreach (var regValue in regValues)
             {
@@ -42,7 +42,7 @@ namespace DiskSweeper
                 + (!string.IsNullOrWhiteSpace(valueName) ? $" /v {valueName}" : "") 
                 + $" /t {dataType}" 
                 + (separator != null ? $" /s {separator}" : "") 
-                + $" /d {data}" 
+                + $" /d '{data}'" 
                 + (force ? " /f" : ""));
         }
     }

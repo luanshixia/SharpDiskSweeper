@@ -22,9 +22,13 @@ namespace DiskSweeper
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            this.PathTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        private async void Window_Initialized(object sender, EventArgs e)
+        {
+            this.PathTextBox.Text = App.StartupPath ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             this.UpdateButtonStatus();
+            await this.NewStart();
         }
 
         private async Task Start()

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DiskSweeper"
         mc:Ignorable="d"
         Title="Disk Sweeper" Height="600" Width="800"
-        Background="DimGray" WindowStartupLocation="CenterScreen">
+        Background="DimGray" WindowStartupLocation="CenterScreen" Initialized="Window_Initialized">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
