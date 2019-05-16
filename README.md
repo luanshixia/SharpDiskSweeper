@@ -7,3 +7,5 @@ Sharp Disk Sweeper is a very useful tool that helps reveal outstanding huge file
 You can [download it](https://github.com/luanshixia/SharpDiskSweeper/releases) to try it out.
 
 Sharp Disk Sweeper is written in C# and WPF. The project is a great example for developers who want to learn WPF and XAML, especially on how to customize the look and feel of standard controls using styles and templates. The project also demonstrates how to effectively start/cancel background tasks with `async` and `await` with the UI still responsive.
+
+Star us, tell your friends, and give us feedback!
