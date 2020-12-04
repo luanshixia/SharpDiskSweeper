@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,6 +11,8 @@ namespace DiskSweeper
 {
     public class SweepEngine
     {
+        private static readonly Dictionary<string, (long, long, long, long)> ResultCache = new Dictionary<string, (long, long, long, long)>();
+
         private readonly DirectoryInfo Directory;
         private const int ProgressReportInterval = 200;
 
@@ -34,22 +35,9 @@ namespace DiskSweeper
             settingName: "DiskSweeper.Highlights.P1.SizeFloor",
             defaultValue: 134217728L);
 
-        public SweepEngine(string path)
-        {
-            this.Directory = new DirectoryInfo(path);
-        }
-
         public SweepEngine(DirectoryInfo dir)
         {
             this.Directory = dir;
-        }
-
-        public ObservableCollection<DiskItem> GetDiskItems()
-        {
-            return new ObservableCollection<DiskItem>(
-                collection: this.Directory
-                    .GetFileSystemInfos()
-                    .Select(info => new DiskItem(info)));
         }
 
         public async Task CalculateDirectorySizeRecursivelyWithUpdateAsync(DirectoryInfo directory, CancellationToken cancellationToken)
@@ -82,6 +70,37 @@ namespace DiskSweeper
             {
                 Trace.WriteLine(ex.Message);
             }
+        }
+
+        private async Task<(long, long, long, long)> GetDirectorySizeRecursivelyAsync(DirectoryInfo directory, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var childDirResults = await Task.WhenAll(directory.GetDirectories()
+                    .Select(childDirectory => this.GetDirectorySizeRecursivelyAsync(childDirectory, cancellationToken)));
+
+                var files = directory.GetFiles();
+
+                var result = (
+                    childDirResults.Sum(r => r.Item1) + files.Sum(file => file.Length), 
+                    childDirResults.Sum(r => r.Item2), 
+                    childDirResults.Sum(r => r.Item3) + files.Length, 
+                    childDirResults.Sum(r => r.Item4) + 1);
+
+                SweepEngine.ResultCache[directory.FullName] = result;
+
+                return result;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+
+            return (0, 0, 0, 0);
         }
 
         private void CountChanges()

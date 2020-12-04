@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace DiskSweeper
     public partial class MainWindow : Window
     {
         private CancellationTokenSource CurrentCancellationTokenSource;
-        private List<string> History = new List<string>();
+        private readonly List<string> History = new List<string>();
         private int HistoryPosition = -1;
 
         public MainWindow()
@@ -35,11 +36,18 @@ namespace DiskSweeper
         {
             this.CurrentCancellationTokenSource?.Cancel();
             this.CurrentCancellationTokenSource = new CancellationTokenSource();
-            var engine = new SweepEngine(this.PathTextBox.Text);
-            var items = engine.GetDiskItems();
+            var items = this.GetDiskItems(this.PathTextBox.Text);
             this.TheList.ItemsSource = items;
             this.TheList.SelectedItem = null;
             await Task.WhenAll(items.Select(item => item.Start(this.CurrentCancellationTokenSource.Token)));
+        }
+
+        private ObservableCollection<DiskItem> GetDiskItems(string dirPath)
+        {
+            return new ObservableCollection<DiskItem>(
+                collection: new DirectoryInfo(dirPath)
+                    .GetFileSystemInfos()
+                    .Select(info => new DiskItem(info)));
         }
 
         private async Task NewStart(string path = null)
