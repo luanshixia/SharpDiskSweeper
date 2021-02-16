@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DiskSweeper
 {
@@ -17,6 +18,7 @@ namespace DiskSweeper
     {
         private CancellationTokenSource CurrentCancellationTokenSource;
         private List<string> History = new List<string>();
+        private string CurrentPath;
         private int HistoryPosition = -1;
 
         public MainWindow()
@@ -49,12 +51,42 @@ namespace DiskSweeper
                 this.PathTextBox.Text = path;
             }
 
+            if (!DirectoryExists(this.PathTextBox.Text))
+            {
+                this.PathTextBox.Foreground = Brushes.Red;
+                return;
+            }
+            else
+            {
+                this.PathTextBox.Foreground = Brushes.Black;
+                this.CurrentPath = this.PathTextBox.Text;
+            }
+
             this.HistoryPosition++;
             this.History.RemoveRange(this.HistoryPosition, this.History.Count - this.HistoryPosition);
             this.History.Add(this.PathTextBox.Text);
             this.UpdateButtonStatus();
 
             await this.Start();
+        }
+
+        private static bool DirectoryExists(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return false;
+            }
+
+            try
+            {
+                Directory.GetFiles(path);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private async Task Navigate(int position)
@@ -115,7 +147,7 @@ namespace DiskSweeper
                     return;
                 }
 
-                await this.NewStart(path: Path.Combine(this.PathTextBox.Text, item.Name));
+                await this.NewStart(path: Path.Combine(this.CurrentPath, item.Name));
             }
         }
 
